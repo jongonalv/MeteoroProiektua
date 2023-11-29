@@ -3,11 +3,14 @@ package Meteoroak;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
+import java.awt.Color;
 import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Comparator;
+
 
 /**
  * The Class meteoroKudeatu.
@@ -15,68 +18,20 @@ import java.util.Comparator;
 public class meteoroKudeatu {
 
 	/**
-	 * Koordenatuak formato egokian sortzeko.
-	 * º ' '' eta h min seg
-	 *
-	 * @param DE1 the de1
-	 * @param RA1 the ra1
-	 * @param DE2 the de2
-	 * @param RA2 the ra2
-	 * @return the string builder
-	 */
-	private static StringBuilder koordenatuakSortu(double DE1, double RA1, double DE2, double RA2) {
-
-		StringBuilder koordenatuak = new StringBuilder();
-
-		double graduak = RA1;
-		double Min = graduak % 1;	
-		Min *= 60;
-		double Seg = Min % 1;
-		Seg *= 60;
-
-		koordenatuak.append("RA1: " + (int) graduak + "º " + (int) Min + "' " + (int) Seg + "'' \n");
-
-		graduak = DE1;
-		Min = graduak % 1;	
-		Min *= 60;
-		Seg = Min % 1;
-		Seg *= 60;
-
-		koordenatuak.append("DE1: " + (int) graduak + "º " + (int) Min + "' " + (int) Seg + "'' \n");
-
-		double orduak = RA2 / 60;
-		Min = orduak %1;
-		Min *= 60;
-		Seg = Min % 1;
-		Seg *= 60;
-
-		koordenatuak.append("RA2: " + (int) orduak + "h " + (int) Min + "min " + (int) Seg + "seg \n");
-
-		orduak = DE2 / 60;
-		Min = orduak %1;
-		Min *= 60;
-		Seg = Min % 1;
-		Seg *= 60;
-
-		koordenatuak.append("DE2: " + (int) orduak + "h " + (int) Min + "min " + (int) Seg + "seg \n");
-
-		return koordenatuak;
-	}
-
-	/**
-	 * Aldagaiak eskatu erabiltzaileari, meteoritoaren datuak
-	 *
+	 * Aldagaiak eskatu erabiltzaileari, meteoritoaren datuak.
 	 *
 	 * @return the meteorito
 	 */
+
 	private static Meteorito aldagaiakEskatu() {
 
 		// Aldagaiak
 		double masa 		= 0.0;
-		double raGraduak	= 0.0;
-		double raMinutoak	= 0.0;
-		double deGraduak	= 0.0;
-		double deMinutoak	= 0.0;
+
+		Koordenatuak raGraduak;
+		Koordenatuak raMinutoak;
+		Koordenatuak deGraduak;
+		Koordenatuak deMinutoak;
 
 		String izena = "";
 		String data  = "";
@@ -86,6 +41,7 @@ public class meteoroKudeatu {
 
 		aukeraDa = false;
 
+		// Aldagai bakoitzeko errore kontrola
 		while (!aukeraDa) {
 			izena = JOptionPane.showInputDialog("Sartu meteoritoaren izena:");
 
@@ -149,10 +105,40 @@ public class meteoroKudeatu {
 		deGraduak = koordenatuaIrakurri("DE1 sartu (Graduak):");
 		deMinutoak = koordenatuaIrakurri("DE2 sartu (Minutuak):");
 
-		// Sortzen diren meteoroen objektuen zerrendari gehitu
-		Meteorito Meteoro = new Meteorito(izena, masa, dataAktibitate, Konposizioa, raGraduak, raMinutoak, deGraduak, deMinutoak);
+		// Iruzkinak gehitzeko blokea, aukerazkoa denez, erabiltzaileari.
+		// galdetu ea nahi duen sartu ala ez, baiezkoa bada, eraikitzaile bat erabili.
+		// Bestela, beste eraikitzailea erabiliko da.
+		String iruzkin = "";
+		int aldagaiakEskatu = JOptionPane.showOptionDialog(
+				null,
+				"Iruzkin bat edo beste daturen bat sartu nahi duzu?",
+				"Iruzkinak",
+				JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				new Object[]{"BAI", "EZ"},
+				"BAI");
+
+		// Aukera bat edo beste erabiltzeko.
+		if (aldagaiakEskatu == JOptionPane.YES_OPTION) {
+			iruzkin = JOptionPane.showInputDialog("Hemen idatzi:");
+			JOptionPane.showMessageDialog(null, "Zure iruzkina: '" + iruzkin + "' gorde egin da.");
+
+		} else {
+			JOptionPane.showMessageDialog(null, "Ez duzu iruzkinik idatzi.");
+
+			// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak gabe.
+			Meteorito Meteoro = new Meteorito(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak);
+			return Meteoro;
+
+		}
+
+		// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak sartuz.
+		Meteorito Meteoro = new Meteorito(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak, iruzkin);
+
 		return Meteoro;
 	}
+
 
 	/**
 	 * Meteoro zerrenda bistaratu.
@@ -171,28 +157,30 @@ public class meteoroKudeatu {
 	}
 
 	/**
-	 * koordenatuak irakurtzeko.
+	 * koordenatuak irakurtzeko, errore kontrola.
 	 *
 	 * @param mezua the mezua
 	 * @return the double
 	 */
 
-	private static double koordenatuaIrakurri(String mezua) {
+	private static Koordenatuak koordenatuaIrakurri(String mezua) {
 
-		double zenb = 0;
+		double zenb;
+		Koordenatuak koordenatu = new Koordenatuak(0);
 		boolean baliozkoa = false;
 
 		while (!baliozkoa) {
 			String sarrera = JOptionPane.showInputDialog(mezua);
 			try {
 				zenb = Double.parseDouble(sarrera);
+				koordenatu.setZenbakia(zenb);
 				baliozkoa = true;
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Balio okerra. Mesedez, sartu zenbaki bat.");
 			}
 		}
 
-		return zenb;
+		return koordenatu;
 	}
 
 	/**
@@ -203,6 +191,10 @@ public class meteoroKudeatu {
 
 	public static void main(String[] args) {
 
+		UIManager.put("OptionPane.background", Color.blue);
+		UIManager.put("Panel.background", Color.cyan);
+		UIManager.put("Button.background", Color.WHITE);
+
 		// Aldagaiak
 		int aukera 			= 0;
 		boolean bukatuDa = true;
@@ -212,27 +204,27 @@ public class meteoroKudeatu {
 
 		// Datak
 		LocalDate data1 = LocalDate.of(1990, 10, 10);		
-		LocalDate data2 = LocalDate.of(1900, 10, 10);		
-		LocalDate data3 = LocalDate.of(2050, 10, 10);		
+
+		//Koordenatuak
+		Koordenatuak RA1 = new Koordenatuak(30.5);		
+		Koordenatuak DE1 = new Koordenatuak(340.52);		
+		Koordenatuak RA2 = new Koordenatuak(130.35);	
+		Koordenatuak DE2 = new Koordenatuak(430.65);	
 
 		// Meteoro objektuak sortu
-		Meteorito M1 = new Meteorito("Bennu", 20000, data1, "Nikel", 250.20, 600.15, 2500.875, 2200.430);	
+		Meteorito M1 = new Meteorito("Bennu", 20000, data1, "Nikel", RA1, RA2, DE1, DE2);	
 		Meteoroak.add(M1);
-		Meteorito M2 = new Meteorito("Apolo", 7500000, data2, "Diamante", 200.120, 4000.65, 3100.90, 5200.234);	
-		Meteoroak.add(M2);
-		Meteorito M3 = new Meteorito("Ceres", 342000, data3, "Izotza", 400.253, 795.21, 253.86, 543.15);
-		Meteoroak.add(M3);
 
 		// MENUA HASIERATU
 		while (bukatuDa == true) {
 
-			String menu = "METEORO KUDEAKETA\n\n";
+			String menu = "\nMETEORO KUDEAKETA\n\n";
 			menu+="1. Meteoro berria gehitu\n";
 			menu+="2. Meteoro bat ezabatu\n";
 			menu+="3. Meteoroak datuaren arabera listatu\n";
 			menu+="4. Meteoro bat eguneratu\n";
 			menu+="5. Bukatu exekutatzen\n";
-			menu+="Aukeratu bat\n";
+			menu+="\nAukeratu bat\n";
 
 			boolean aukeraDa = false;
 
@@ -325,7 +317,7 @@ public class meteoroKudeatu {
 						JOptionPane.showMessageDialog(null, "Zenbaki bat sartu behar duzu.");
 					}
 				}
-				
+
 				//Comparator bat, meteorito objektuko datu motak konparatzeko
 				Comparator<Meteorito> comparator = null;
 
@@ -338,10 +330,16 @@ public class meteoroKudeatu {
 					comparator = Comparator.comparing(Meteorito::getMasa);
 					break;
 				case 3:
-					comparator = Comparator.comparing((Meteorito m) -> m.getRaGraduak() + m.getRaMinutoak());
+					comparator = Comparator.comparing((Meteorito m) -> {
+						Koordenatuak koordenatuak = m.getRaGraduak();
+						return koordenatuak.getZenbakia();
+					});
 					break;
 				case 4:
-					comparator = Comparator.comparing((Meteorito m) -> m.getDeGraduak() + m.getDeMinutoak());
+					comparator = Comparator.comparing((Meteorito m) -> {
+						Koordenatuak koordenatuak = m.getDeGraduak();
+						return koordenatuak.getZenbakia();
+					});
 					break;
 				case 5:
 					comparator = Comparator.comparing(Meteorito::getDataAktibitate);
@@ -367,9 +365,13 @@ public class meteoroKudeatu {
 
 					mezua.append(i).append(". - Izena: ").append(meteoroOrdenatua.getIzena()).append("\n");
 					mezua.append("Masa: " + meteoroOrdenatua.getMasa()).append("\n");
-					mezua.append(koordenatuakSortu(meteoroOrdenatua.getDeGraduak(), meteoroOrdenatua.getRaGraduak(), meteoroOrdenatua.getDeMinutoak(), meteoroOrdenatua.getRaMinutoak()));
+					mezua.append("RA1: " + meteoroOrdenatua.getRaGraduak().toStringGraduak() + ("\n")
+							+  "RA2: " + meteoroOrdenatua.getRaMinutoak().toStringOrduak() + ("\n")
+							+  "DE1: " +  meteoroOrdenatua.getDeGraduak().toStringGraduak() + ("\n")
+							+  "DE2: " + meteoroOrdenatua.getDeMinutoak().toStringOrduak() + ("\n"));
 					mezua.append("Data aktibitate maximoa: " + meteoroOrdenatua.getDataAktibitate()).append("\n");
-					mezua.append("Konposizioa: " + meteoroOrdenatua.getKonposizioa()).append("\n\n");
+					mezua.append("Konposizioa: " + meteoroOrdenatua.getKonposizioa()).append("\n");
+					mezua.append("Iruzkinak: " + meteoroOrdenatua.getIruzkina()).append("\n\n");
 				}
 
 				JOptionPane.showMessageDialog(null, mezua);
@@ -418,6 +420,7 @@ public class meteoroKudeatu {
 				Meteoro.setRaMinutoak(Meteoro.getRaMinutoak());
 				Meteoro.setDeGraduak(MeteoroBerria.getRaMinutoak());
 				Meteoro.setDeMinutoak(MeteoroBerria.getDeMinutoak());
+				Meteoro.setIruzkina(MeteoroBerria.getIruzkina());
 
 				mezua.append("Meteorito: ").append(azkenekoIzena).append(" eguneratuta,").append(" horain: ").append(MeteoroBerria.getIzena());
 				JOptionPane.showMessageDialog(null, mezua);
@@ -431,4 +434,7 @@ public class meteoroKudeatu {
 
 		JOptionPane.showMessageDialog(null, "Exekuzioa bukatu da.");
 	}
+
+
+	public void froga() {}
 }

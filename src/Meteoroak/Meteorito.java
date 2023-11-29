@@ -4,11 +4,13 @@ import java.time.*;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class Meteorito.
  */
 public class Meteorito {
+
 
 	/** The izena. */
 	// Atributuoak definitu
@@ -25,24 +27,21 @@ public class Meteorito {
 	
 	/** The ra graduak. */
 	//Zeruko posizioa ateratzeko aldagaiak
-    private double raGraduak;
+    private Koordenatuak raGraduak;
     
     /** The ra minutoak. */
-    private double raMinutoak;
+    private Koordenatuak raMinutoak;
     
     /** The de graduak. */
-    private double deGraduak;
+    private Koordenatuak deGraduak;
     
     /** The de minutoak. */
-    private double deMinutoak;
+    private Koordenatuak deMinutoak;
+    
+    /** The de minutoak. */
+    private String iruzkina;
 	
 	//Klase eraikitzaileak	
-	
-	/**
-	 * Instantiates a new meteorito.
-	 *
-	 * @param aldatuMasa the aldatu masa
-	 */
 	
 	/**
 	 * Instantiates a new meteorito.
@@ -56,8 +55,9 @@ public class Meteorito {
 	 * @param deGraduak the de graduak
 	 * @param deMinutoak the de minutoak
 	 */
-	Meteorito(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, double raGraduak,
-			double raMinutoak, double deGraduak, double deMinutoak)
+    
+	Meteorito(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
+			Koordenatuak raMinutoak, Koordenatuak deGraduak, Koordenatuak deMinutoak)
 	{
 		this.izena 			= izena;
 		this.masa			= masa;
@@ -69,6 +69,34 @@ public class Meteorito {
 		this.deMinutoak 	= deMinutoak;
 		
 	}
+	
+	/**
+	 * Instantiates a new meteorito.
+	 *
+	 * @param izena the izena
+	 * @param masa the masa
+	 * @param dataAktibitate the data aktibitate
+	 * @param Konposizioa the konposizioa
+	 * @param raGraduak the ra graduak
+	 * @param raMinutoak the ra minutoak
+	 * @param deGraduak the de graduak
+	 * @param deMinutoak the de minutoak
+	 * @param iruzkina the iruzkina
+	 */
+	Meteorito(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
+			Koordenatuak raMinutoak, Koordenatuak deGraduak, Koordenatuak deMinutoak, String iruzkina)
+	{	
+		this.izena 			= izena;
+		this.masa			= masa;
+		this.dataAktibitate = dataAktibitate;
+		this.Konposizioa 	= Konposizioa;
+		this.raGraduak 		= raGraduak;
+		this.raMinutoak 	= raMinutoak;
+		this.deGraduak 		= deGraduak;
+		this.deMinutoak 	= deMinutoak;
+		this.iruzkina		= iruzkina;
+	}
+
 	
 	/**
 	 * Gets the izena.
@@ -130,7 +158,7 @@ public class Meteorito {
 	 *
 	 * @return the de graduak
 	 */
-	public double getDeGraduak() {
+	public Koordenatuak getDeGraduak() {
 		return deGraduak;
 	}
 	
@@ -139,7 +167,7 @@ public class Meteorito {
 	 *
 	 * @param deGraduak the new de graduak
 	 */
-	public void setDeGraduak(double deGraduak) {
+	public void setDeGraduak(Koordenatuak deGraduak) {
 		this.deGraduak = deGraduak;
 	}
 	
@@ -148,7 +176,7 @@ public class Meteorito {
 	 *
 	 * @return the ra graduak
 	 */
-	public double getRaGraduak() {
+	public Koordenatuak getRaGraduak() {
 		return raGraduak;
 	}
 	
@@ -157,7 +185,7 @@ public class Meteorito {
 	 *
 	 * @param raGraduak the new ra graduak
 	 */
-	public void setRaGraduak(double raGraduak) {
+	public void setRaGraduak(Koordenatuak raGraduak) {
 		this.raGraduak = raGraduak;
 	}
 	
@@ -166,7 +194,7 @@ public class Meteorito {
 	 *
 	 * @return the de minutoak
 	 */
-	public double getDeMinutoak() {
+	public Koordenatuak getDeMinutoak() {
 		return deMinutoak;
 	}
 	
@@ -175,7 +203,7 @@ public class Meteorito {
 	 *
 	 * @param deMinutoak the new de minutoak
 	 */
-	public void setDeMinutoak(double deMinutoak) {
+	public void setDeMinutoak(Koordenatuak deMinutoak) {
 		this.deMinutoak = deMinutoak;
 	}
 	
@@ -184,7 +212,7 @@ public class Meteorito {
 	 *
 	 * @return the ra minutoak
 	 */
-	public double getRaMinutoak() {
+	public Koordenatuak getRaMinutoak() {
 		return raMinutoak;
 	}
 	
@@ -193,7 +221,7 @@ public class Meteorito {
 	 *
 	 * @param raMinutoak the new ra minutoak
 	 */
-	public void setRaMinutoak(double raMinutoak) {
+	public void setRaMinutoak(Koordenatuak raMinutoak) {
 		this.raMinutoak = raMinutoak;
 	}
 	 
@@ -214,4 +242,23 @@ public class Meteorito {
 	public LocalDate getDataAktibitate() {
 		return dataAktibitate;
 	}	
+	
+	/**
+	 * Gets the iruzkina.
+	 *
+	 * @return the iruzkina
+	 */
+	public String getIruzkina() {
+		return iruzkina;
+	}
+	
+	/**
+	 * Sets the iruzkina.
+	 *
+	 * @param iruzkina the new iruzkina
+	 */
+	public void setIruzkina(String iruzkina) {
+		this.iruzkina = iruzkina;
+	}
+	
 }
