@@ -6,7 +6,7 @@ import java.time.*;
 /**
  * The Class Meteorito.
  */
-public class Astroa {
+public class Astroa implements intAstro {
 
 
 	/** The izena. */
