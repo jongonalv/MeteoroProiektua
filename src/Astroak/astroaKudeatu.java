@@ -1,4 +1,4 @@
-package Meteoroak;
+package Astroak;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ import java.util.Comparator;
 /**
  * The Class meteoroKudeatu.
  */
-public class meteoroKudeatu {
+public class astroaKudeatu {
 
 	/**
 	 * Aldagaiak eskatu erabiltzaileari, meteoritoaren datuak.
@@ -23,7 +23,7 @@ public class meteoroKudeatu {
 	 * @return the meteorito
 	 */
 
-	private static Meteorito aldagaiakEskatu() {
+	private static Astroa aldagaiakEskatu() {
 
 		// Aldagaiak
 		double masa 		= 0.0;
@@ -128,13 +128,13 @@ public class meteoroKudeatu {
 			JOptionPane.showMessageDialog(null, "Ez duzu iruzkinik idatzi.");
 
 			// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak gabe.
-			Meteorito Meteoro = new Meteorito(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak);
+			Astroa Meteoro = new Astroa(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak);
 			return Meteoro;
 
 		}
 
 		// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak sartuz.
-		Meteorito Meteoro = new Meteorito(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak, iruzkin);
+		Astroa Meteoro = new Astroa(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak, iruzkin);
 
 		return Meteoro;
 	}
@@ -146,11 +146,11 @@ public class meteoroKudeatu {
 	 * @param meteoroak the meteoroak
 	 */
 	// Meteoritoak listatzeko funtzioa
-	public static void meteoroZerrenda(ArrayList<Meteorito> meteoroak) {
+	public static void meteoroZerrenda(ArrayList<Astroa> meteoroak) {
 		StringBuilder mezua = new StringBuilder();
 		mezua.append("Sartutako meteoritoen zerrenda:\n");
 		for (int i = 0; i < meteoroak.size(); i++) {
-			Meteorito meteorito = meteoroak.get(i);
+			Astroa meteorito = meteoroak.get(i);
 			mezua.append(i).append(". Izena: ").append(meteorito.getIzena()).append("\n");
 		}
 		JOptionPane.showMessageDialog(null, mezua.toString());
@@ -200,7 +200,7 @@ public class meteoroKudeatu {
 		boolean bukatuDa = true;
 
 		// Meteoroak gordetzeko zerrenda
-		ArrayList<Meteorito> 	Meteoroak 		= new ArrayList<Meteorito>();
+		ArrayList<Astroa> 	Meteoroak 		= new ArrayList<Astroa>();
 
 		// Datak
 		LocalDate data1 = LocalDate.of(1990, 10, 10);		
@@ -212,7 +212,7 @@ public class meteoroKudeatu {
 		Koordenatuak DE2 = new Koordenatuak(430.65);	
 
 		// Meteoro objektuak sortu
-		Meteorito M1 = new Meteorito("Bennu", 20000, data1, "Nikel", RA1, RA2, DE1, DE2);	
+		Astroa M1 = new Astroa("Bennu", 20000, data1, "Nikel", RA1, RA2, DE1, DE2);	
 		Meteoroak.add(M1);
 
 		// MENUA HASIERATU
@@ -246,7 +246,7 @@ public class meteoroKudeatu {
 			// Meteoro berria gehitzeko blokea
 			if (aukera == 1) {
 
-				Meteorito Meteoro = aldagaiakEskatu();
+				Astroa Meteoro = aldagaiakEskatu();
 				Meteoroak.add(Meteoro);
 
 				JOptionPane.showMessageDialog(null, "METEORO BERRI BAT SARTU DA!");
@@ -267,7 +267,7 @@ public class meteoroKudeatu {
 					try {
 						indizea = Integer.parseInt(input);
 						if (indizea >= 0 && indizea < Meteoroak.size()) {
-							Meteorito borratu = (Meteorito) Meteoroak.remove(indizea);
+							Astroa borratu = (Astroa) Meteoroak.remove(indizea);
 							mezua.append("Meteorito: ").append(borratu.getIzena()).append(" ezabatuta");
 							JOptionPane.showMessageDialog(null, mezua);
 							aukeraDa = true;
@@ -319,33 +319,33 @@ public class meteoroKudeatu {
 				}
 
 				//Comparator bat, meteorito objektuko datu motak konparatzeko
-				Comparator<Meteorito> comparator = null;
+				Comparator<Astroa> comparator = null;
 
 				//Aukeraren arabera, datu mota bat edo beste konparatu
 				switch (aukera2) {
 				case 1:
-					comparator = Comparator.comparing(Meteorito::getIzena);
+					comparator = Comparator.comparing(Astroa::getIzena);
 					break;
 				case 2:
-					comparator = Comparator.comparing(Meteorito::getMasa);
+					comparator = Comparator.comparing(Astroa::getMasa);
 					break;
 				case 3:
-					comparator = Comparator.comparing((Meteorito m) -> {
+					comparator = Comparator.comparing((Astroa m) -> {
 						Koordenatuak koordenatuak = m.getRaGraduak();
 						return koordenatuak.getZenbakia();
 					});
 					break;
 				case 4:
-					comparator = Comparator.comparing((Meteorito m) -> {
+					comparator = Comparator.comparing((Astroa m) -> {
 						Koordenatuak koordenatuak = m.getDeGraduak();
 						return koordenatuak.getZenbakia();
 					});
 					break;
 				case 5:
-					comparator = Comparator.comparing(Meteorito::getDataAktibitate);
+					comparator = Comparator.comparing(Astroa::getDataAktibitate);
 					break;
 				case 6:
-					comparator = Comparator.comparing(Meteorito::getKonposizioa);
+					comparator = Comparator.comparing(Astroa::getKonposizioa);
 					break;
 				default:
 					System.out.println("Aukera ez da egokia. Menu-ra bueltatu.");
@@ -361,14 +361,14 @@ public class meteoroKudeatu {
 
 				// Meteoroen zerrenda atera, datu motaren arabera
 				for (int i = 0; i < Meteoroak.size(); i++) {
-					Meteorito meteoroOrdenatua = Meteoroak.get(i);
+					Astroa meteoroOrdenatua = Meteoroak.get(i);
 
 					mezua.append(i).append(". - Izena: ").append(meteoroOrdenatua.getIzena()).append("\n");
 					mezua.append("Masa: " + meteoroOrdenatua.getMasa()).append("\n");
 					mezua.append("RA1: " + meteoroOrdenatua.getRaGraduak().toStringGraduak() + ("\n")
-							+  "RA2: " + meteoroOrdenatua.getRaMinutoak().toStringOrduak() + ("\n")
-							+  "DE1: " +  meteoroOrdenatua.getDeGraduak().toStringGraduak() + ("\n")
-							+  "DE2: " + meteoroOrdenatua.getDeMinutoak().toStringOrduak() + ("\n"));
+							 +  "RA2: " + meteoroOrdenatua.getRaMinutoak().toStringOrduak() + ("\n")
+							 +  "DE1: " +  meteoroOrdenatua.getDeGraduak().toStringGraduak() + ("\n")
+							 +  "DE2: " + meteoroOrdenatua.getDeMinutoak().toStringOrduak() + ("\n"));
 					mezua.append("Data aktibitate maximoa: " + meteoroOrdenatua.getDataAktibitate()).append("\n");
 					mezua.append("Konposizioa: " + meteoroOrdenatua.getKonposizioa()).append("\n");
 					mezua.append("Iruzkinak: " + meteoroOrdenatua.getIruzkina()).append("\n\n");
@@ -404,8 +404,8 @@ public class meteoroKudeatu {
 				}
 
 				//Aldagai berriak sartzen dira eta meteoro berri batean gordetzen dira
-				Meteorito MeteoroBerria = aldagaiakEskatu();
-				Meteorito Meteoro = Meteoroak.get(aukera3);
+				Astroa MeteoroBerria = aldagaiakEskatu();
+				Astroa Meteoro = Meteoroak.get(aukera3);
 
 				StringBuilder mezua = new StringBuilder();
 
@@ -434,7 +434,4 @@ public class meteoroKudeatu {
 
 		JOptionPane.showMessageDialog(null, "Exekuzioa bukatu da.");
 	}
-
-
-	public void froga() {}
 }

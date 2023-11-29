@@ -1,45 +1,44 @@
-package Meteoroak;
+package Astroak;
 
 import java.time.*;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class Meteorito.
  */
-public class Meteorito {
+public class Astroa {
 
 
 	/** The izena. */
 	// Atributuoak definitu
-	private String izena;
+	protected String izena;
 	
 	/** The masa. */
-	private double masa;
+	protected void name() {
+		
+	} double masa;
 	
 	/** The Konposizioa. */
-	private String Konposizioa;
+	protected String Konposizioa;
 	
 	/** The data aktibitate. */
-	private LocalDate dataAktibitate;
+	protected LocalDate dataAktibitate;
 	
 	/** The ra graduak. */
 	//Zeruko posizioa ateratzeko aldagaiak
-    private Koordenatuak raGraduak;
+	protected Koordenatuak raGraduak;
     
     /** The ra minutoak. */
-    private Koordenatuak raMinutoak;
+	protected Koordenatuak raMinutoak;
     
     /** The de graduak. */
-    private Koordenatuak deGraduak;
+	protected Koordenatuak deGraduak;
     
     /** The de minutoak. */
-    private Koordenatuak deMinutoak;
+	protected Koordenatuak deMinutoak;
     
     /** The de minutoak. */
-    private String iruzkina;
+	protected String iruzkina;
 	
 	//Klase eraikitzaileak	
 	
@@ -56,7 +55,7 @@ public class Meteorito {
 	 * @param deMinutoak the de minutoak
 	 */
     
-	Meteorito(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
+	Astroa(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
 			Koordenatuak raMinutoak, Koordenatuak deGraduak, Koordenatuak deMinutoak)
 	{
 		this.izena 			= izena;
@@ -83,7 +82,7 @@ public class Meteorito {
 	 * @param deMinutoak the de minutoak
 	 * @param iruzkina the iruzkina
 	 */
-	Meteorito(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
+	Astroa(String izena, double masa, LocalDate dataAktibitate, String Konposizioa, Koordenatuak raGraduak,
 			Koordenatuak raMinutoak, Koordenatuak deGraduak, Koordenatuak deMinutoak, String iruzkina)
 	{	
 		this.izena 			= izena;
