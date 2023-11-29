@@ -10,6 +10,7 @@ import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Scanner;
 
 
 /**
@@ -33,6 +34,8 @@ public class astroaKudeatu {
 		Koordenatuak deGraduak;
 		Koordenatuak deMinutoak;
 
+		Scanner scanner = new Scanner(System.in);
+
 		String izena = "";
 		String data  = "";
 		String Konposizioa = "";
@@ -43,44 +46,48 @@ public class astroaKudeatu {
 
 		// Aldagai bakoitzeko errore kontrola
 		while (!aukeraDa) {
-			izena = JOptionPane.showInputDialog("Sartu meteoritoaren izena:");
-
+			System.out.println("Sartu meteoritoaren izena:");
+			izena = scanner.nextLine();
 			if (izena != null && !izena.trim().isEmpty()) {
 				aukeraDa = true;
 			} else {
-				JOptionPane.showMessageDialog(null, "Mesedez, sartu izen bat.");
+				System.out.println("Mesedez, sartu izen bat.");
 			}
 		}
 
 		aukeraDa = false;
 
 		while (!aukeraDa) {
-			String input = JOptionPane.showInputDialog("Meteoritoaren masa sartu");
+			System.out.print("Meteoritoaren masa sartu: ");
+			String input = scanner.nextLine();
 			try {
 				masa = Integer.parseInt(input);
+
 				if (masa > 0) {
 					aukeraDa = true;
 				} else {
-					JOptionPane.showMessageDialog(null, "Sartu duzun zenbakia negatiboa da");
+					System.out.println("Sartu duzun zenbakia negatiboa ada");
 				}
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Zenbaki bat sartu behar duzu.");
+				System.out.println("Zenbaki bat sartu behar duzu.");
 			}
 		}
+
 
 		aukeraDa = false;
 
 		while (!aukeraDa) {
-			data = JOptionPane.showInputDialog("Sartu meteoritoaren data (UUUU-HH-EE):");
+			System.out.print("Sartu meteoritoaren data (UUUU-HH-EE): ");
+			data = scanner.nextLine();
 			try {
 				if (izena != null && !izena.trim().isEmpty()) {
 					LocalDate dataAktibitate = LocalDate.parse(data);
 					aukeraDa = true;
 				} else {
-					JOptionPane.showMessageDialog(null, "Ez da ezer sartu");
+					System.out.println("Ez da ezer sartu");
 				}
 			} catch (DateTimeParseException e) {
-				JOptionPane.showMessageDialog(null, "UUUU-HH-EE formatoa erabili, mesedez");
+				System.out.println("UUUU-HH-EE formatoa erabili, mesedez");
 			}
 		}
 
@@ -89,16 +96,17 @@ public class astroaKudeatu {
 		aukeraDa = false;
 
 		while (!aukeraDa) {
-			Konposizioa = JOptionPane.showInputDialog("Sartu meteoritoaren konposizioa:");
+			System.out.println("Sartu meteoritoaren konposizioa:");
+			Konposizioa = scanner.nextLine();
 
 			if (izena != null && !izena.trim().isEmpty()) {
 				aukeraDa = true;
 			} else {
-				JOptionPane.showMessageDialog(null, "Mesedez, sartu konposizio bat.");
+				System.out.println("Mesedez, sartu konposizio bat.");
 			}
 		}
 
-		JOptionPane.showMessageDialog(null, "Sartu zeruko posizioa. RA/DE metodoa erabiliko da.");
+		System.out.println("Sartu zeruko posizioa. RA/DE metodoa erabiliko da.");
 
 		raGraduak = koordenatuaIrakurri("RA1 sartu (Graduak):");
 		raMinutoak = koordenatuaIrakurri("RA2 sartu (Minutuak):");
@@ -108,35 +116,34 @@ public class astroaKudeatu {
 		// Iruzkinak gehitzeko blokea, aukerazkoa denez, erabiltzaileari.
 		// galdetu ea nahi duen sartu ala ez, baiezkoa bada, eraikitzaile bat erabili.
 		// Bestela, beste eraikitzailea erabiliko da.
+
 		String iruzkin = "";
-		int aldagaiakEskatu = JOptionPane.showOptionDialog(
-				null,
-				"Iruzkin bat edo beste daturen bat sartu nahi duzu?",
-				"Iruzkinak",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				new Object[]{"BAI", "EZ"},
-				"BAI");
+
+		System.out.print("Iruzkin bat edo beste daturen bat sartu nahi duzu? (BAI/EZ): ");
+		String respuesta = scanner.nextLine();
 
 		// Aukera bat edo beste erabiltzeko.
-		if (aldagaiakEskatu == JOptionPane.YES_OPTION) {
-			iruzkin = JOptionPane.showInputDialog("Hemen idatzi:");
-			JOptionPane.showMessageDialog(null, "Zure iruzkina: '" + iruzkin + "' gorde egin da.");
+		if ("BAI".equalsIgnoreCase(respuesta)) {
+			System.out.print("Hemen idatzi: ");
+			iruzkin = scanner.nextLine();
+			System.out.println("Zure iruzkina: '" + iruzkin + "' gorde egin da.");
 
-		} else {
-			JOptionPane.showMessageDialog(null, "Ez duzu iruzkinik idatzi.");
+		} else if ("EZ".equalsIgnoreCase(respuesta)) {
+			System.out.println("Ez duzu iruzkinik idatzi.");
 
 			// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak gabe.
 			Astroa Meteoro = new Astroa(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak);
 			return Meteoro;
 
+		} else {
+			System.out.println("Hautatu duzun erantzunak ez da baliogarria. Programa amaituko da.");
+			return null;  // o realiza alguna acción adicional según tus necesidades
 		}
 
 		// Sortzen diren meteoroen objektuen zerrendari gehitu, iruzkinak sartuz.
 		Astroa Meteoro = new Astroa(izena, masa, dataAktibitate, Konposizioa, raGraduak, raGraduak, deGraduak, deMinutoak, iruzkin);
-
 		return Meteoro;
+
 	}
 
 
@@ -153,7 +160,7 @@ public class astroaKudeatu {
 			Astroa meteorito = meteoroak.get(i);
 			mezua.append(i).append(". Izena: ").append(meteorito.getIzena()).append("\n");
 		}
-		JOptionPane.showMessageDialog(null, mezua.toString());
+		System.out.println(mezua.toString());
 	}
 
 	/**
@@ -169,14 +176,18 @@ public class astroaKudeatu {
 		Koordenatuak koordenatu = new Koordenatuak(0);
 		boolean baliozkoa = false;
 
+		Scanner scanner = new Scanner(System.in);
+
 		while (!baliozkoa) {
-			String sarrera = JOptionPane.showInputDialog(mezua);
+			System.out.print(mezua);
+			String sarrera = scanner.nextLine();
+
 			try {
 				zenb = Double.parseDouble(sarrera);
 				koordenatu.setZenbakia(zenb);
 				baliozkoa = true;
 			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Balio okerra. Mesedez, sartu zenbaki bat.");
+				System.out.println("Balio okerra. Mesedez, sartu zenbaki bat.");
 			}
 		}
 
@@ -203,7 +214,10 @@ public class astroaKudeatu {
 		ArrayList<Astroa> 	Meteoroak 		= new ArrayList<Astroa>();
 
 		// Datak
-		LocalDate data1 = LocalDate.of(1990, 10, 10);		
+		LocalDate data1 = LocalDate.of(1990, 10, 10);
+
+		// Scanner
+		Scanner scanner = new Scanner(System.in);
 
 		//Koordenatuak
 		Koordenatuak RA1 = new Koordenatuak(30.5);		
@@ -230,16 +244,19 @@ public class astroaKudeatu {
 
 			// Funtzio aukeraketa eta errore kontrola. 
 			while (!aukeraDa) {
-				String input = JOptionPane.showInputDialog(menu);
+				System.out.print(menu);
+				String input = scanner.nextLine();
+
 				try {
 					aukera = Integer.parseInt(input);
+
 					if (aukera >= 1 && aukera <= 5) {
 						aukeraDa = true;
 					} else {
-						JOptionPane.showMessageDialog(null, "Sartu duzun zenbakia ez da 1-5 artekoa.");
+						System.out.println("Sartu duzun zenbakia ez da 1-5 artekoa.");
 					}
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Zenbaki bat sartu behar duzu.");
+					System.out.println("Zenbaki bat sartu behar duzu.");
 				}
 			}
 
@@ -249,7 +266,7 @@ public class astroaKudeatu {
 				Astroa Meteoro = aldagaiakEskatu();
 				Meteoroak.add(Meteoro);
 
-				JOptionPane.showMessageDialog(null, "METEORO BERRI BAT SARTU DA!");
+				System.out.println("METEORO BERRI BAT SARTU DA!");
 			}
 
 			//Meteoro bat ezabatzeko blokea
@@ -262,27 +279,28 @@ public class astroaKudeatu {
 
 				// Errore kontrola, zerrendaren arabera eta negatiboa bada menua itzultzeko aukera
 				while (!aukeraDa) {
-					String input = JOptionPane.showInputDialog("Sartu ezabatu nahi duzun meteoroaren zenbakia. Ateratzeko, zenbaki negatibo bat sartu");
+					System.out.print("Sartu ezabatu nahi duzun meteoroaren zenbakia. Ateratzeko, zenbaki negatibo bat sartu: ");
 					StringBuilder mezua = new StringBuilder();
+
 					try {
-						indizea = Integer.parseInt(input);
+						indizea = Integer.parseInt(scanner.nextLine());
+
 						if (indizea >= 0 && indizea < Meteoroak.size()) {
 							Astroa borratu = (Astroa) Meteoroak.remove(indizea);
 							mezua.append("Meteorito: ").append(borratu.getIzena()).append(" ezabatuta");
-							JOptionPane.showMessageDialog(null, mezua);
+							System.out.println(mezua);
 							aukeraDa = true;
-						} else if (indizea < 0){
-							JOptionPane.showMessageDialog(null, "Menu-ra itzuliko da");
+						} else if (indizea < 0) {
 							break;
 						} else {
-							JOptionPane.showMessageDialog(null, "Sartutako zenbakia zerrendatik kanpo dago");
+							System.out.println("Sartutako zenbakia zerrendatik kanpo dago");
 						}
 					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Zenbaki bat sartu, mesedez.");
+						System.out.println("Zenbaki bat sartu, mesedez.");
 					}
 				}
 			}
-
+			
 			//Meteoroak datu motaren arabera zerrendatzeko blokea
 			if (aukera == 3) {
 
@@ -295,26 +313,27 @@ public class astroaKudeatu {
 				menu2+="3.- RA koordenatuen arabera\n";
 				menu2+="4.- DE koordenatuen arabera\n";
 				menu2+="5.- Aktibitate dataren arabera\n";
-				menu2+="6.- Konposizioa";
+				menu2+="6.- Konposizioa\n";
 
 				aukeraDa = false;
 
 				// Errore kontrola. Datu mota aukeratzeko. Zenbaki bat izan behar du.
 				// Zenbakia 1-5 tartean egon behar du. Negatiboa sartzen bada bueltatzeko aukera.
 				while (!aukeraDa) {
-					String input2 = JOptionPane.showInputDialog(menu2);
+					System.out.print(menu2);
 					try {
-						aukera2 = Integer.parseInt(input2);
+						aukera2 = scanner.nextInt();
+
 						if (aukera2 >= 1 && aukera2 <= 6) {
 							aukeraDa = true;
 						} else if (aukera2 < 0) {
-							JOptionPane.showMessageDialog(null, "Menu-ra itzuli");
-							return;
+							System.out.println("Menu-ra itzuli");
+							return; // o realiza alguna acción adicional según tus necesidades
 						} else {
-							JOptionPane.showMessageDialog(null, "Zenbakia ez da egokia");
+							System.out.println("Zenbakia ez da egokia");
 						}
 					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Zenbaki bat sartu behar duzu.");
+						System.out.println("Zenbaki bat sartu behar duzu.");
 					}
 				}
 
@@ -366,15 +385,15 @@ public class astroaKudeatu {
 					mezua.append(i).append(". - Izena: ").append(meteoroOrdenatua.getIzena()).append("\n");
 					mezua.append("Masa: " + meteoroOrdenatua.getMasa()).append("\n");
 					mezua.append("RA1: " + meteoroOrdenatua.getRaGraduak().toStringGraduak() + ("\n")
-							 +  "RA2: " + meteoroOrdenatua.getRaMinutoak().toStringOrduak() + ("\n")
-							 +  "DE1: " +  meteoroOrdenatua.getDeGraduak().toStringGraduak() + ("\n")
-							 +  "DE2: " + meteoroOrdenatua.getDeMinutoak().toStringOrduak() + ("\n"));
+							+  "RA2: " + meteoroOrdenatua.getRaMinutoak().toStringOrduak() + ("\n")
+							+  "DE1: " +  meteoroOrdenatua.getDeGraduak().toStringGraduak() + ("\n")
+							+  "DE2: " + meteoroOrdenatua.getDeMinutoak().toStringOrduak() + ("\n"));
 					mezua.append("Data aktibitate maximoa: " + meteoroOrdenatua.getDataAktibitate()).append("\n");
 					mezua.append("Konposizioa: " + meteoroOrdenatua.getKonposizioa()).append("\n");
 					mezua.append("Iruzkinak: " + meteoroOrdenatua.getIruzkina()).append("\n\n");
 				}
 
-				JOptionPane.showMessageDialog(null, mezua);
+				System.out.println(mezua);
 			}
 
 			//Meteoroak eguneratzeko blokea
@@ -389,17 +408,19 @@ public class astroaKudeatu {
 				// Errore kontrola. Erabiltzaileari eskatzeko zein meteoro nahi duen aukeratu
 				// Zenbaki bat bakarrik izan behar du, meteoro zerrenda tartean.
 				// Zenbakia negatiboa bada menura itzultzeko aukera.
+
 				while (!aukeraDa) {
-					String input = JOptionPane.showInputDialog("Sartu eguneratu nahi den meteoroaren zenbakia:");
+					System.out.print("Sartu eguneratu nahi den meteoroaren zenbakia: ");
 					try {
-						aukera = Integer.parseInt(input);
+						aukera = Integer.parseInt(scanner.nextLine());
+
 						if (aukera >= 0 && aukera < Meteoroak.size()) {
 							aukeraDa = true;
 						} else {
-							JOptionPane.showMessageDialog(null, "Sartutako zenbakia zerrendatik kanpo dago");
+							System.out.println("Sartutako zenbakia zerrendatik kanpo dago");
 						}
 					} catch (NumberFormatException e) {
-						JOptionPane.showMessageDialog(null, "Zenbaki bat sartu behar duzu.");
+						System.out.println("Zenbaki bat sartu behar duzu.");
 					}
 				}
 
@@ -423,7 +444,7 @@ public class astroaKudeatu {
 				Meteoro.setIruzkina(MeteoroBerria.getIruzkina());
 
 				mezua.append("Meteorito: ").append(azkenekoIzena).append(" eguneratuta,").append(" horain: ").append(MeteoroBerria.getIzena());
-				JOptionPane.showMessageDialog(null, mezua);
+				System.out.println(mezua);
 
 			}	
 
@@ -431,7 +452,6 @@ public class astroaKudeatu {
 				bukatuDa = false;
 			}			
 		}
-
-		JOptionPane.showMessageDialog(null, "Exekuzioa bukatu da.");
+		System.out.println("Exekuzioa bukatu da.");
 	}
 }
